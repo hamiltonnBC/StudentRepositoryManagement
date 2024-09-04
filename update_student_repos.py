@@ -29,8 +29,8 @@ for repo_dir in os.listdir(hw_submissions_dir):
             # Determine the branch with the latest commit and trim whitespace
             try:
                 latest_branch = \
-                subprocess.check_output(["git", "branch", "-r", "--sort=-committerdate"]).decode().split("\n")[
-                    0].replace("origin/", "").strip()
+                    subprocess.check_output(["git", "branch", "-r", "--sort=-committerdate"]).decode().split("\n")[
+                        0].replace("HEAD -> ", "").replace("origin/", "").strip()
             except subprocess.CalledProcessError:
                 repo_issues[repo_dir] = "Failed to determine the latest branch"
                 continue
@@ -43,7 +43,8 @@ for repo_dir in os.listdir(hw_submissions_dir):
                 continue
 
             # Update the branch to the latest version from the remote
-            subprocess.run(["git", "pull", "origin", latest_branch], check=True)
+            subprocess.run(
+                ["git", "pull", "origin", latest_branch], check=True)
 
         except subprocess.CalledProcessError as e:
             repo_issues[repo_dir] = f"Error: {str(e)}"
